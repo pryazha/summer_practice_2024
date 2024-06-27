@@ -1,6 +1,7 @@
 <?php
-require 'config.php';
+require('config.php');
 session_start();
+require_once('include/functions.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
@@ -29,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+    <?php generateNavBar($conn) ?>
     <div class="container">
         <div class="header">
             <h1>Login</h1>
@@ -39,7 +41,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 Password: <input type="password" name="password" required><br>
                 <button type="submit">Login</button>
             </form>
-            <p><a href="index.php">Back to Home</a></p>
         </div>
     </div>
 </body>

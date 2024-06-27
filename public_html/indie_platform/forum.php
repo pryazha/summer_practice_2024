@@ -1,27 +1,22 @@
 <?php
-require 'config.php';
+require('config.php');
 session_start();
+require('include/functions.php');
 
-function isLoggedIn() {
-    return isset($_SESSION['user_id']);
-}
-
-// Обработка создания новой темы
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['title']) && isset($_POST['message'])) {
     $title = $_POST['title'];
     $message = $_POST['message'];
+    $user_id = $_SESSION['user_id'];
 
-    // Добавляем новую тему в базу данных
-    $stmt = $conn->prepare("INSERT INTO forum_topics (title) VALUES (?)");
-    $stmt->bind_param("s", $title);
+    $stmt = $conn->prepare("INSERT INTO forum_topics (title, user_id) VALUES (?, ?)");
+    $stmt->bind_param("si", $title, $user_id);
 
     if ($stmt->execute()) {
         $new_topic_id = $stmt->insert_id;
         $stmt->close();
 
-        // Добавляем первое сообщение в эту тему
         $stmt = $conn->prepare("INSERT INTO forum_messages (topic_id, user_id, message) VALUES (?, ?, ?)");
-        $stmt->bind_param("iis", $new_topic_id, $_SESSION['user_id'], $message);
+        $stmt->bind_param("iis", $new_topic_id, $user_id, $message);
 
         if ($stmt->execute()) {
             $stmt->close();
@@ -36,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['title']) && isset($_PO
 }
 
 // Получаем список тем
-$topics_result = $conn->query("SELECT id, title FROM forum_topics ORDER BY id DESC");
+$topics_result = $conn->query("SELECT ft.id, ft.title, u.username, ft.created_at FROM forum_topics ft JOIN users u ON ft.user_id = u.id ORDER BY ft.created_at DESC");
 
 ?>
 <!DOCTYPE html>
@@ -46,17 +41,8 @@ $topics_result = $conn->query("SELECT id, title FROM forum_topics ORDER BY id DE
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+    <?php generateNavBar($conn) ?>
     <div class="container">
-        <div class="header">
-            <h1>Forum</h1>
-            <?php if (isLoggedIn()): ?>
-                <p>Welcome, user! You are logged in.</p>
-                <p><a href="index.php">Back to Home</a> | <a href="logout.php">Logout</a></p>
-            <?php else: ?>
-                <p><a href="register.php">Register</a> | <a href="login.php">Login</a></p>
-            <?php endif; ?>
-        </div>
-
         <div class="forum">
             <!-- Форма для создания новой темы -->
             <?php if (isLoggedIn()): ?>
@@ -77,7 +63,10 @@ $topics_result = $conn->query("SELECT id, title FROM forum_topics ORDER BY id DE
             <ul class="topics">
                 <?php if ($topics_result->num_rows > 0): ?>
                     <?php while ($row = $topics_result->fetch_assoc()): ?>
-                        <li><a href="topic.php?id=<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['title']); ?></a></li>
+                        <li>
+                            <a href="topic.php?id=<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['title']); ?></a>
+                            <p>Posted by <?php echo htmlspecialchars($row['username']); ?> on <?php echo $row['created_at']; ?></p>
+                        </li>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <li>No topics available.</li>
