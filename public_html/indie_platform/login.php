@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: index.php");
         exit();
     } else {
-        echo "Invalid email or password.";
+        $status = "Invalid email or password.";
     }
 }
 ?>
@@ -37,10 +37,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="form-container">
             <form method="post">
-                Email: <input type="email" name="email" required><br>
-                Password: <input type="password" name="password" required><br>
+                <label for="email">Email:</label>
+                <input type="email" name="email" required><br>
+
+                <label for="password">Password:</label>
+                <input type="password" name="password" required><br>
+
                 <button type="submit">Login</button>
-            </form>
+            </form><br>
+            <h3><?php if (isset($status)) { echo $status; } ?></h3>
         </div>
     </div>
 </body>

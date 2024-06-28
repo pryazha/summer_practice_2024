@@ -44,7 +44,6 @@ $topics_result = $conn->query("SELECT ft.id, ft.title, u.username, ft.created_at
     <?php generateNavBar($conn) ?>
     <div class="container">
         <div class="forum">
-            <!-- Форма для создания новой темы -->
             <?php if (isLoggedIn()): ?>
                 <div class="form-container">
                     <h2>Create New Topic</h2>
@@ -58,20 +57,19 @@ $topics_result = $conn->query("SELECT ft.id, ft.title, u.username, ft.created_at
                 <p><a href="login.php">Login</a> to create new topics.</p>
             <?php endif; ?>
 
-            <!-- Список тем форума -->
             <h2>Forum Topics</h2>
-            <ul class="topics">
+            <div class="topics">
                 <?php if ($topics_result->num_rows > 0): ?>
                     <?php while ($row = $topics_result->fetch_assoc()): ?>
-                        <li>
-                            <a href="topic.php?id=<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['title']); ?></a>
+                        <div class="topic">
+                            <h3><a href="topic.php?id=<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['title']); ?></a></h3>
                             <p>Posted by <?php echo htmlspecialchars($row['username']); ?> on <?php echo $row['created_at']; ?></p>
-                        </li>
+                        </div>
                     <?php endwhile; ?>
                 <?php else: ?>
-                    <li>No topics available.</li>
+                    <p>No topics available.</p>
                 <?php endif; ?>
-            </ul>
+            </div>
         </div>
     </div>
 </body>

@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['username']) && isset($
         header("Location: index.php");
         exit();
     } else {
-        echo "Error: " . $stmt->error;
+        $status = "Error: " . $stmt->error;
     }
     $stmt->close();
 }
@@ -36,17 +36,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['username']) && isset($
         </div>
         <div class="form-container">
             <form action="register.php" method="post">
-                <label for="username">Username:</label><br>
-                <input type="text" name="username" id="username" required><br><br>
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" required><br>
                 
-                <label for="email">Email:</label><br>
-                <input type="email" name="email" id="email" required><br><br>
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" required><br>
                 
-                <label for="password">Password:</label><br>
-                <input type="password" name="password" id="password" required><br><br>
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" required><br>
                 
                 <button type="submit">Register</button>
-            </form>
+            </form><br>
+            <h3><?php if (isset($status)) { echo $status; } ?></h3>
         </div>
     </div>
 </body>

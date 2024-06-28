@@ -53,9 +53,8 @@ $user_comment_stmt->close();
             <h2><?php echo htmlspecialchars($title); ?></h2>
             <p><?php echo htmlspecialchars($description); ?></p>
             <p>Uploaded by <?php echo htmlspecialchars($author_username); ?></p>
-            <a href="<?php echo $file_path; ?>" download>Download</a>
+            <h4><a href="<?php echo $file_path; ?>" download>Download</a></h4>
 
-            <!-- Список комментариев -->
             <div class="comments">
                 <h3>Comments</h3>
                 <?php if ($comments_result->num_rows > 0): ?>
@@ -76,7 +75,8 @@ $user_comment_stmt->close();
                     <h3>Add a new comment</h3>
                     <form method="post">
                         <textarea name="comment" rows="4" cols="50" required></textarea><br>
-                        <label for="rating">Rating:</label>
+
+                        Rating:
                         <select name="rating" id="rating" required>
                             <option value="1">1</option>
                             <option value="2">2</option>

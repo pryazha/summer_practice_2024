@@ -24,7 +24,7 @@ $assets_result = $conn->query("SELECT id, title, description, file_path, image_p
                     <?php endif; ?>
                     <h3><a href="asset.php?id=<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['title']); ?></a></h3>
                     <p class="asset-description"><?php echo htmlspecialchars($row['description']); ?></p>
-                    <a href="<?php echo $row['file_path']; ?>" download>Download</a>
+                    <a class="asset-download-button" href="<?php echo $row['file_path']; ?>" download>Download</a>
                 </div>
                 <?php endwhile; ?>
             <?php else: ?>
